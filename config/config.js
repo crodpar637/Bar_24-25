@@ -3,7 +3,7 @@ require('dotenv').config({
 });
 
 module.exports = {
-  port: process.env.PORT || 80,
+  port: process.env.PORT || 8080,
   db: {
     host: process.env.DB_HOST || "crossover.proxy.rlwy.net",
     user: process.env.DB_USER || "root",
