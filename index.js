@@ -1,6 +1,6 @@
 // Importar libreria para manejo de ficheros de configuración
-require('dotenv').config({
-  path: `.env.${process.env.NODE_ENV || 'development'}` 
+require("dotenv").config({
+  path: `.env.${process.env.NODE_ENV || "development"}`,
 });
 // Importar fichero de configuración con variables de entorno
 const config = require("./config/config");
@@ -44,14 +44,21 @@ app.use("/api/platos", platoRoutes);
 app.use("/api/pedidos", pedidoRoutes);
 app.use("/api/users", userRoutes);
 
-// Configurar el middleware para servir archivos estáticos desde el directorio 'public\old_js_vainilla'
-app.use(express.static(path.join(__dirname, "public")));
-
 //Ruta para manejar las solicitudes al archivo index.html
 // app.get('/', (req, res) => {
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
+if (process.env.NODE_ENV !== "production") {
+  // Configurar el middleware para servir archivos estáticos desde el directorio public/dev en desarrollo
+  app.use(express.static(path.join(__dirname, "public/dev")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public/dev", "index.html"));
+  });
+} else {
+  // Configurar el middleware para servir archivos estáticos desde el directorio public/dev en producción
+  app.use(express.static(path.join(__dirname, "public/dev")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public/prod", "index.html"));
+  });
+}
 
 // Iniciar el servidor solo si no estamos en modo de prueba
 if (process.env.NODE_ENV !== "test") {
